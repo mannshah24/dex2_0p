@@ -1,16 +1,16 @@
 /**
- * Devnet Configuration for DEX 2.0
- * Contains all devnet-specific addresses, endpoints, and settings
+ * Mainnet Configuration for DEX 2.0
+ * Contains all mainnet-specific addresses, endpoints, and settings
  */
 
 import { PublicKey } from '@solana/web3.js';
 
 export const DevnetConfig = {
   // Network Settings
-  RPC_ENDPOINT: 'https://api.devnet.solana.com',
-  CHAIN_ID: 'solana:devnet',
+  RPC_ENDPOINT: 'https://api.mainnet-beta.solana.com',
+  CHAIN_ID: 'solana:mainnet',
   EXPLORER_BASE_URL: 'https://explorer.solana.com',
-  CLUSTER: 'devnet' as const,
+  CLUSTER: 'mainnet' as const,
 
   // Official Program IDs (these are the same on all networks)
   PROGRAMS: {
@@ -39,32 +39,32 @@ export const DevnetConfig = {
     },
   },
 
-  // Common Devnet Token Addresses
+  // Common Mainnet Token Addresses
   TOKENS: {
     SOL: new PublicKey('So11111111111111111111111111111111111111112'),
-    USDC: new PublicKey('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU'), // USDC Devnet
-    USDT: new PublicKey('EJwZgeZrdC8TXTQbQBoL6bfuAnFUUy1PVCMB4DYPzVaS'), // USDT Devnet
-    // Add more devnet tokens as needed
+    USDC: new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'), // USDC Mainnet
+    USDT: new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'), // USDT Mainnet
+    // Add more mainnet tokens as needed
   },
 
-  // Example Pool Addresses for Testing
+  // Example Pool Addresses for Mainnet
   POOLS: {
     RAYDIUM: {
       CP_SWAP: {
-        SOL_USDC: new PublicKey('6UmmUiYoBjSrhakAobJw8BvkmJtDVxaeBtbt7rxWo1mg'),
+        SOL_USDC: new PublicKey('8sLbNZoA1cfnvMJLPfp98ZLAnFSYCFApfJKMbiXNLwxj'),
       },
       CLMM: {
-        SOL_USDC: new PublicKey('2QdhepnKRTLjjSqPL1PtKNwqrUkoLee5Gqs8bvZhRdMv'),
+        SOL_USDC: new PublicKey('7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm'),
       },
     },
     ORCA: {
       WHIRLPOOL: {
-        SOL_USDC: new PublicKey('HJPjoWUrhoZzkNfRpHuieeFk9WcZWjwy6PBjZ81ngndJ'),
+        SOL_USDC: new PublicKey('7qbRF6YsyGuLUVs6Y1q64bdVrfe4ZcUUz1JRdoVNUJnm'),
       },
     },
   },
 
-  // Whitelisted Transfer Hook Programs for Devnet Testing
+  // Whitelisted Transfer Hook Programs for Mainnet
   TRANSFER_HOOKS: {
     FEE_COLLECTION: new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'),
     COMPLIANCE: new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'),
@@ -79,36 +79,33 @@ export const DevnetConfig = {
     COINGECKO: 'https://api.coingecko.com/api/v3',
   },
 
-  // Devnet-specific Rate Limits (more lenient for testing)
+  // Mainnet-specific Rate Limits (more conservative for production)
   RATE_LIMITS: {
     COINGECKO: {
-      REQUESTS_PER_MINUTE: 5, // More requests for testing
+      REQUESTS_PER_MINUTE: 3, // Conservative rate for production
       TIME_WINDOW: 60000,
     },
     SOLANA_RPC: {
-      REQUESTS_PER_MINUTE: 15, // More requests for testing
+      REQUESTS_PER_MINUTE: 10, // Conservative rate for production
       TIME_WINDOW: 60000,
     },
     JUPITER: {
-      REQUESTS_PER_MINUTE: 10,
+      REQUESTS_PER_MINUTE: 8,
       TIME_WINDOW: 60000,
     },
   },
 
-  // Testing Configuration
-  TESTING: {
-    DEFAULT_AIRDROP_AMOUNT: 2, // 2 SOL for testing
-    FAUCET_ENDPOINTS: [
-      'https://faucet.solana.com',
-      'https://solfaucet.com',
-    ],
+  // Production Configuration
+  PRODUCTION: {
+    DEFAULT_AIRDROP_AMOUNT: 0, // No airdrops on mainnet
+    FAUCET_ENDPOINTS: [], // No faucets on mainnet
   },
 } as const;
 
 export type DevnetConfigType = typeof DevnetConfig;
 
 // Helper functions
-export const isDevnet = () => DevnetConfig.CLUSTER === 'devnet';
+export const isMainnet = () => DevnetConfig.CLUSTER === 'mainnet';
 
 export const getExplorerUrl = (signature: string) => 
   `${DevnetConfig.EXPLORER_BASE_URL}/tx/${signature}?cluster=${DevnetConfig.CLUSTER}`;

@@ -97,7 +97,7 @@ if (transferHookConfig) {
 ### **Network Configuration** ✅ **CORRECT**
 ```typescript
 // All services configured for devnet
-RPC_ENDPOINT: 'https://api.devnet.solana.com',
+RPC_ENDPOINT: 'https://api.mainnet-beta.solana.com',
 CHAIN_ID: 'solana:devnet',
 EXPLORER_BASE_URL: 'https://explorer.solana.com',
 ```

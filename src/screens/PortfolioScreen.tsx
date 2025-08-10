@@ -13,6 +13,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useApp } from '../context/AppContext';
 import { } from '../services/WalletService';
 
+interface TokenBalance {
+  mint: { toString: () => string };
+  symbol: string;
+  name: string;
+  balance: number;
+  value?: number;
+  price?: number;
+  decimals: number;
+}
+
 const PortfolioScreen: React.FC = () => {
   const { walletService, walletInfo, requestAirdrop } = useApp();
   const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
@@ -27,7 +37,7 @@ const PortfolioScreen: React.FC = () => {
     if (!walletInfo) return;
 
     try {
-      const balances = await walletService.getTokenBalances();
+      const balances = await walletService.getTokenBalances(walletInfo.publicKey);
       setTokenBalances(balances);
       
       // Calculate total portfolio value

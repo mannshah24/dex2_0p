@@ -150,7 +150,7 @@ export default function SendScreen({ hideHeader = false }: { hideHeader?: boolea
         // SOL transfer
         const { Connection, PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } = await import('@solana/web3.js');
         
-        const connection = new Connection('https://api.testnet.solana.com', 'confirmed');
+        const connection = new Connection('https://api.mainnet-beta.solana.com', 'confirmed');
         const transaction = new Transaction();
         
         const transferInstruction = SystemProgram.transfer({
@@ -171,7 +171,7 @@ export default function SendScreen({ hideHeader = false }: { hideHeader?: boolea
         const { Connection, PublicKey, Transaction } = await import('@solana/web3.js');
         const { createTransferInstruction, getAssociatedTokenAddress } = await import('@solana/spl-token');
         
-        const connection = new Connection('https://api.testnet.solana.com', 'confirmed');
+        const connection = new Connection('https://api.mainnet-beta.solana.com', 'confirmed');
         const transaction = new Transaction();
         
         // Get token accounts

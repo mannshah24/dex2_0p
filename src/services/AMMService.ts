@@ -1,18 +1,19 @@
 import {
-  createAssociatedTokenAccountInstruction,
-  createInitializeAccount3Instruction,
-  getAccount,
-  getAssociatedTokenAddress,
-  TOKEN_2022_PROGRAM_ID
+    createAssociatedTokenAccountInstruction,
+    createInitializeAccount3Instruction,
+    getAccount,
+    getAssociatedTokenAddress,
+    TOKEN_2022_PROGRAM_ID
 } from '@solana/spl-token';
 import {
-  Connection,
-  Keypair,
-  PublicKey,
-  sendAndConfirmTransaction,
-  SystemProgram,
-  SYSVAR_RENT_PUBKEY,
-  Transaction,
+    Connection,
+    Keypair,
+    PublicKey,
+    sendAndConfirmTransaction,
+    SystemProgram,
+    SYSVAR_RENT_PUBKEY,
+    Transaction,
+    TransactionInstruction,
 } from '@solana/web3.js';
 
 export interface PoolInfo {
@@ -50,6 +51,30 @@ export interface TransferHookInfo {
   programId: PublicKey;
   authority: PublicKey;
   data?: Buffer;
+}
+
+/**
+ * Create a Transfer Hook instruction (placeholder implementation)
+ */
+function createTransferHookInstruction(
+  mint: PublicKey,
+  user: PublicKey,
+  hookProgramId: PublicKey,
+  authority: PublicKey,
+  hookData: Buffer,
+  tokenProgramId: PublicKey
+): TransactionInstruction {
+  // This is a placeholder implementation
+  // In a real Transfer Hook program, this would create the proper instruction
+  return new TransactionInstruction({
+    programId: hookProgramId,
+    keys: [
+      { pubkey: mint, isSigner: false, isWritable: false },
+      { pubkey: user, isSigner: true, isWritable: false },
+      { pubkey: authority, isSigner: false, isWritable: false },
+    ],
+    data: hookData,
+  });
 }
 
 export class AMMService {

@@ -636,11 +636,11 @@ jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 const config = {
   development: {
     apiUrl: 'https://dev-api.dexscreener.com',
-    rpcUrl: 'https://api.devnet.solana.com',
+    rpcUrl: 'https://api.mainnet-beta.solana.com',
   },
   staging: {
     apiUrl: 'https://staging-api.dexscreener.com',
-    rpcUrl: 'https://api.testnet.solana.com',
+    rpcUrl: 'https://api.mainnet-beta.solana.com',
   },
   production: {
     apiUrl: 'https://api.dexscreener.com',

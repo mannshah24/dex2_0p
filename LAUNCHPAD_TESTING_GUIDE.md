@@ -76,7 +76,7 @@ const url = `https://explorer.solana.com/tx/${signature}?cluster=devnet`;
 ```bash
 # Make sure your wallet (Phantom/Solflare) is set to devnet
 # Network: Solana Devnet
-# RPC: https://api.devnet.solana.com
+# RPC: https://api.mainnet-beta.solana.com
 ```
 
 #### **2. Get Devnet SOL**

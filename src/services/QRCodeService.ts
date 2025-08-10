@@ -79,7 +79,7 @@ export class QRCodeService {
    */
   async generateExplorerQRCode(
     signature: string,
-    network: 'mainnet' | 'devnet' | 'testnet' = 'devnet',
+    network: 'mainnet' | 'devnet' | 'testnet' = 'mainnet',
     options: QRCodeOptions = {}
   ): Promise<string> {
     const explorerURL = `https://explorer.solana.com/tx/${signature}?cluster=${network}`;

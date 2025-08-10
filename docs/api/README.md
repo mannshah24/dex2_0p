@@ -140,8 +140,8 @@ interface PaginatedResponse<T> extends ApiResponse<T[]> {
 ```typescript
 // RPC endpoint configuration
 const RPC_ENDPOINTS = {
-  devnet: 'https://api.devnet.solana.com',
-  testnet: 'https://api.testnet.solana.com',
+  mainnet: 'https://api.mainnet-beta.solana.com',
+  testnet: 'https://api.mainnet-beta.solana.com',
   mainnet: 'https://api.mainnet-beta.solana.com',
   local: 'http://localhost:8899'
 };

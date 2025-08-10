@@ -2,9 +2,7 @@ import { useAppTheme } from '@/components/app-theme';
 import { Ionicons } from '@expo/vector-icons';
 import { router, Tabs, usePathname } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
-
-const { width } = Dimensions.get('window');
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface TabItem {
   key: string;

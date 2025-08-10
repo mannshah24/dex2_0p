@@ -31,7 +31,7 @@ interface TokenBalance {
 
 interface Transaction {
   id: string;
-  type: 'send' | 'receive' | 'swap' | 'airdrop' | 'mint';
+  type: 'send' | 'receive' | 'swap' | 'airdrop' | 'mint' | 'unknown';
   amount: number;
   symbol: string;
   from?: string;
@@ -318,6 +318,7 @@ export default function PortfolioScreen() {
   const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
   const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([]);
   const [totalValue, setTotalValue] = useState(0);
+  const [solBalance, setSolBalance] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
 

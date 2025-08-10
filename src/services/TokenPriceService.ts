@@ -32,7 +32,6 @@ class TokenPriceService {
     'mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So': 'msol', // mSOL
     '7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj': 'stsol', // stSOL
     '7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr': 'psol', // pSOL
-    'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263': 'bonk', // BONK
     '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU': 'samoyedcoin', // SAMO
     'AFbX8oGjGpmVFywbVouvhQSRmiW2aR1mohfahi4Y2AdB': 'gst', // GST
     'RLBxxFkseAZ4RgJH3Sqn8jXxhmGoMz9Q8h2BqzabwJY': 'rollbit-coin', // RLB

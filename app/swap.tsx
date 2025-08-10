@@ -7,14 +7,14 @@ import { VersionedTransaction } from '@solana/web3.js';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Alert,
-  FlatList,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Alert,
+    FlatList,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 
 // Common token mints for mainnet - Updated with mainnet addresses
@@ -150,7 +150,7 @@ export default function SwapScreen({ hideHeader = false }: { hideHeader?: boolea
         }
       }, NetworkConfig.CONNECTION_CHECK_INTERVAL);
 
-      setConnectionCheckInterval(intervalId);
+      setConnectionCheckInterval(intervalId as unknown as number);
 
       return () => {
         if (intervalId) {

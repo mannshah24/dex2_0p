@@ -1,5 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
-
 export interface TokenMetadata {
   address: string;
   symbol: string;

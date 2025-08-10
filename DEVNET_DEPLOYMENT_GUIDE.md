@@ -54,7 +54,7 @@ const connection = new Connection(DevnetConfig.RPC_ENDPOINT, 'confirmed');
 
 ```typescript
 export const DevnetConfig = {
-  RPC_ENDPOINT: 'https://api.devnet.solana.com',
+  RPC_ENDPOINT: 'https://api.mainnet-beta.solana.com',
   CHAIN_ID: 'solana:devnet',
   PROGRAMS: {
     RAYDIUM: {
@@ -184,7 +184,7 @@ const explorerUrl = getExplorerUrl(signature);
 
 | Component | Status | Configuration |
 |-----------|--------|---------------|
-| **RPC Endpoint** | ✅ Ready | `https://api.devnet.solana.com` |
+| **RPC Endpoint** | ✅ Ready | `https://api.mainnet-beta.solana.com` |
 | **Wallet Chain** | ✅ Ready | `solana:devnet` |
 | **Program IDs** | ✅ Ready | Official Raydium, Orca, Jupiter IDs |
 | **Token Addresses** | ✅ Ready | Valid devnet USDC, SOL addresses |

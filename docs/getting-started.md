@@ -66,8 +66,8 @@ Configure the following environment variables:
 
 ```env
 # Solana Configuration
-SOLANA_RPC_URL=https://api.devnet.solana.com
-SOLANA_WS_URL=wss://api.devnet.solana.com
+SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+SOLANA_WS_URL=wss://api.mainnet-beta.solana.com
 
 # App Configuration
 EXPO_PUBLIC_APP_NAME=DEX Screener

@@ -5,24 +5,14 @@ import { NotificationModal } from '@/components/NotificationModal';
 import { useApp } from '@/src/context/AppContext';
 import { useNotifications } from '@/src/context/NotificationContext';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    View
 } from 'react-native';
-
-interface TokenBalance {
-  mint: string;
-  symbol: string;
-  name: string;
-  balance: number;
-  value?: number;
-  price?: number;
-  decimals: number;
-}
 
 interface RecentLaunch {
   id: string;
@@ -56,7 +46,7 @@ export default function HomeScreen() {
   const [isLoadingData, setIsLoadingData] = useState(false);
 
   // Load total balance (SOL + all tokens)
-  const loadTotalBalance = async () => {
+  const loadTotalBalance = useCallback(async () => {
     if (!walletInfo || !walletService || isLoadingData) return;
 
     try {
@@ -86,7 +76,7 @@ export default function HomeScreen() {
             const tokenValue = token.balance * realPrice;
             total += tokenValue;
             console.log(`✅ Token ${token.mint}: ${token.balance} * $${realPrice} = $${tokenValue}`);
-          } catch (error) {
+          } catch (_error) {
             console.warn(`⚠️ Failed to get real price for ${token.mint}, using fallback`);
             // Fallback to mock price if real price fetch fails
             const mockPrice = getMockTokenPrice(token.mint);
@@ -122,7 +112,7 @@ export default function HomeScreen() {
     } finally {
       setIsLoadingData(false);
     }
-  };
+  }, [walletInfo, walletService, isLoadingData, getRealTimeSOLPrice, getRealTimeTokenPrice]);
 
   // Mock price function - replace with real price API
   const getMockTokenPrice = (mint: string): number => {
@@ -137,7 +127,7 @@ export default function HomeScreen() {
   };
 
   // Load recent launches from actual data
-  const loadRecentLaunches = async () => {
+  const loadRecentLaunches = useCallback(async () => {
     if (isLoadingData) return;
     
     try {
@@ -220,7 +210,7 @@ export default function HomeScreen() {
 
       setRecentLaunches(mockLaunches);
     }
-  };
+  }, [isLoadingData, getRecentTokenLaunches]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -238,7 +228,7 @@ export default function HomeScreen() {
       loadTotalBalance();
       loadRecentLaunches();
     }
-  }, [walletInfo]);
+  }, [walletInfo, loadTotalBalance, loadRecentLaunches]);
 
   const handleRequestAirdrop = async () => {
     try {

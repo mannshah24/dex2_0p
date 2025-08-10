@@ -63,7 +63,7 @@ cp .env.example .env
 # Configure environment variables
 EXPO_PUBLIC_APP_ENV=development
 EXPO_PUBLIC_API_URL=https://dev-api.dexscreener.com
-EXPO_PUBLIC_RPC_URL=https://api.devnet.solana.com
+EXPO_PUBLIC_RPC_URL=https://api.mainnet-beta.solana.com
 EXPO_PUBLIC_APP_VERSION=1.0.0
 ```
 
@@ -101,7 +101,7 @@ eas build --platform all --profile staging
       "env": {
         "EXPO_PUBLIC_APP_ENV": "staging",
         "EXPO_PUBLIC_API_URL": "https://staging-api.dexscreener.com",
-        "EXPO_PUBLIC_RPC_URL": "https://api.testnet.solana.com"
+        "EXPO_PUBLIC_RPC_URL": "https://api.mainnet-beta.solana.com"
       }
     },
     "production": {

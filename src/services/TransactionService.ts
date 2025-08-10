@@ -198,7 +198,7 @@ class TransactionService {
             amount: Math.abs(difference),
             from: difference < 0 ? balance.owner : '',
             to: difference > 0 ? balance.owner : '',
-            tokenSymbol: balance.uiTokenAmount.symbol || undefined
+            tokenSymbol: balance.mint || undefined
           });
         }
       }

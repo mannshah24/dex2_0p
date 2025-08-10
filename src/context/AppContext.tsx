@@ -725,7 +725,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const generateExplorerQRCode = async (
     signature: string,
-    network: 'mainnet' | 'devnet' | 'testnet' = 'devnet'
+    network: 'mainnet' | 'devnet' | 'testnet' = 'mainnet'
   ): Promise<string> => {
     if (!qrCodeService) {
       throw new Error('QR code service not initialized');
