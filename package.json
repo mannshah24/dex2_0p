@@ -29,6 +29,7 @@
     "android:build": "expo prebuild -p android",
     "build": "tsc --noEmit && npm run android:build",
     "ci": "tsc --noEmit && npm run lint:check && npm run fmt:check && npm run android:build",
+    "clean": "rm -rf .expo android/build android/.gradle ios/build node_modules && pnpm install",
     "dev": "expo start",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check .",
@@ -55,7 +56,7 @@
     "@solana/web3.js": "^1.98.2",
     "@tanstack/react-query": "^5.80.6",
     "@wallet-standard/core": "^1.1.1",
-    "bs58": "^6.0.0",
+    "bs58": "^5.0.0",
     "expo": "~53.0.16",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.6",
@@ -93,6 +94,23 @@
     "eslint-config-expo": "~9.2.0",
     "prettier": "^3.5.3",
     "typescript": "~5.8.3"
+  },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "@solana-mobile/mobile-wallet-adapter-protocol",
+          "@solana-mobile/mobile-wallet-adapter-protocol-web3js",
+          "@solana/spl-token",
+          "@solana/web3.js",
+          "@wallet-standard/core",
+          "bs58",
+          "js-base64",
+          "react-native-snackbar"
+        ],
+        "listUnknownPackages": false
+      }
+    }
   },
   "private": true
 }
