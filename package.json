@@ -1,11 +1,19 @@
 {
-  "name": "web3js-expo",
-  "description": "A template for building a Solana mobile app with Expo and React Native.",
+  "name": "dex2-token-amm",
+  "description": "DEX2.0 - Token-2022 AMM with Transfer Hooks Support. Advanced AMM for Token Extensions with Transfer Hook compliance.",
+  "version": "1.0.0",
   "keywords": [
+    "token-2022",
+    "transfer-hooks",
+    "solana-amm",
+    "token-extensions",
     "expo",
     "mobile-wallet-adapter",
     "react-native",
-    "solana-web3js"
+    "solana-web3js",
+    "defi",
+    "amm",
+    "whitelisted-hooks"
   ],
   "create-solana-dapp": {
     "instructions": [
@@ -32,7 +40,6 @@
     "web": "expo start --web"
   },
   "main": "./index.js",
-  "version": "1.0.0",
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-native-async-storage/async-storage": "2.1.2",

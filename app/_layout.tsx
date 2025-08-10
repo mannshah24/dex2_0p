@@ -1,3 +1,5 @@
+
+
 import { AppNavigationGuard } from '@/components/app-navigation-guard'
 import { AppProviders } from '@/components/app-providers'
 import { PortalHost } from '@rn-primitives/portal'
@@ -40,6 +42,8 @@ export default function RootLayout() {
             <Stack.Screen name="send" options={{ headerShown: false }} />
             <Stack.Screen name="receive" options={{ headerShown: false }} />
             <Stack.Screen name="swap" options={{ headerShown: false }} />
+            <Stack.Screen name="token2022-test" options={{ headerShown: false }} />
+            <Stack.Screen name="transfer-hook-launchpad" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
           </Stack>
         </AppNavigationGuard>

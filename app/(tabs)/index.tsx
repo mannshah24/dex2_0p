@@ -1,3 +1,5 @@
+
+
 import { AppText } from '@/components/app-text';
 import { useAppTheme } from '@/components/app-theme';
 import { NotificationButton } from '@/components/NotificationButton';
@@ -7,11 +9,11 @@ import { useNotifications } from '@/src/context/NotificationContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useCallback, useEffect, useState } from 'react';
 import {
-    RefreshControl,
-    ScrollView,
-    StyleSheet,
-    TouchableOpacity,
-    View
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 interface RecentLaunch {

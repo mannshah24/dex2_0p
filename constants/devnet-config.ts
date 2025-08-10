@@ -1,7 +1,4 @@
-/**
- * Mainnet Configuration for DEX 2.0
- * Contains all mainnet-specific addresses, endpoints, and settings
- */
+
 
 import { PublicKey } from '@solana/web3.js';
 

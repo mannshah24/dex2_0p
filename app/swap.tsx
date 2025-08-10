@@ -1,3 +1,4 @@
+
 import { AppText } from '@/components/app-text';
 import { useAppTheme } from '@/components/app-theme';
 import { NetworkConfig } from '@/constants/network-config';
@@ -7,14 +8,14 @@ import { VersionedTransaction } from '@solana/web3.js';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-    Alert,
-    FlatList,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  FlatList,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 // Common token mints for mainnet - Updated with mainnet addresses

@@ -1,3 +1,5 @@
+
+
 import { AppText } from '@/components/app-text';
 import { useAppTheme } from '@/components/app-theme';
 import PriceChart from '@/src/components/PriceChart';

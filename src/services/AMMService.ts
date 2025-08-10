@@ -1,19 +1,19 @@
 import {
-    createAssociatedTokenAccountInstruction,
-    createInitializeAccount3Instruction,
-    getAccount,
-    getAssociatedTokenAddress,
-    TOKEN_2022_PROGRAM_ID
+  createAssociatedTokenAccountInstruction,
+  createInitializeAccount3Instruction,
+  getAccount,
+  getAssociatedTokenAddress,
+  TOKEN_2022_PROGRAM_ID
 } from '@solana/spl-token';
 import {
-    Connection,
-    Keypair,
-    PublicKey,
-    sendAndConfirmTransaction,
-    SystemProgram,
-    SYSVAR_RENT_PUBKEY,
-    Transaction,
-    TransactionInstruction,
+  Connection,
+  Keypair,
+  PublicKey,
+  sendAndConfirmTransaction,
+  SystemProgram,
+  SYSVAR_RENT_PUBKEY,
+  Transaction,
+  TransactionInstruction,
 } from '@solana/web3.js';
 
 export interface PoolInfo {

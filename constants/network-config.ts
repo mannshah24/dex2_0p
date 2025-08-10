@@ -1,7 +1,4 @@
-/**
- * Network and timeout configuration for the DEX application
- * Optimized for Jupiter swaps and mobile wallet adapter
- */
+
 
 export const NetworkConfig = {
   // RPC Connection Timeouts

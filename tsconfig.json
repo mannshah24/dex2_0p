@@ -3,9 +3,12 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "jsx": "react-native",
-    "lib": ["dom", "esnext"],
+    "lib": [
+      "dom",
+      "esnext"
+    ],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
@@ -19,20 +22,23 @@
     "noUncheckedIndexedAccess": false,
     "exactOptionalPropertyTypes": false,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
-    "**/*.ts", 
-    "**/*.tsx", 
-    ".expo/types/**/*.ts", 
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ],
   "exclude": [
-    "node_modules", 
-    "android", 
-    "ios", 
+    "node_modules",
+    "android",
+    "ios",
     ".expo",
     "**/*.d.ts"
-  ]
+  ],
+  "extends": "expo/tsconfig.base"
 }

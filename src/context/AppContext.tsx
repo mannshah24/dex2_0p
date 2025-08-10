@@ -1,3 +1,4 @@
+
 import { DecreaseLiquidityParams, IncreaseLiquidityParams, LiquidityPosition, Token2022LiquidityService, Token2022PoolConfig } from '@/src/services/Token2022LiquidityService';
 import { TokenImageService } from '@/src/services/TokenImageService';
 import { TransferHookAMMService } from '@/src/services/TransferHookAMMService';
@@ -65,6 +66,7 @@ export interface AppContextType {
   walletService: WalletService | null;
   tokenImageService: TokenImageService | null;
   dexService: any | null; // Add missing dexService
+  transferHookAMMService: TransferHookAMMService | null;
   // Real-time data services
   tokenPriceService: TokenPriceService | null;
   transactionService: TransactionService | null;
@@ -1035,6 +1037,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     walletService,
     tokenImageService,
     dexService,
+    transferHookAMMService,
     // Real-time data services
     tokenPriceService,
     transactionService,

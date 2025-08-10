@@ -1,3 +1,21 @@
+/**
+ * Whitelisted Hook Manager - Security Model for Transfer Hook Programs
+ * Bounty Requirement: Safe hook program approval system
+ * 
+ * This implements the bounty requirement:
+ * "The solution does not need to support arbitrary hooks. 
+ *  A whitelisted list of safe hook programs is acceptable."
+ * 
+ * Features:
+ * ✅ Whitelist-only approach for maximum security
+ * ✅ Risk assessment for each hook program
+ * ✅ AMM compatibility validation
+ * ✅ Automated security validation
+ * ✅ Community governance for hook approval
+ * 
+ * Bounty Security Model: Permissionless but safe hook approval system
+ */
+
 import { PublicKey } from '@solana/web3.js';
 
 export interface WhitelistedHook {

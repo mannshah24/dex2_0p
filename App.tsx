@@ -1,3 +1,4 @@
+
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AppNavigationGuard } from '@/components/app-navigation-guard';
 import { AppProviders } from '@/components/app-providers';
