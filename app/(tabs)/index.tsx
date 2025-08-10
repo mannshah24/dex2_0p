@@ -47,7 +47,7 @@ export default function HomeScreen() {
   const [recentLaunches, setRecentLaunches] = useState<RecentLaunch[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(false);
 
-  // Load total balance (SOL + all tokens)
+  // Load total balance (SOL + all tokens) with minimal API calls
   const loadTotalBalance = useCallback(async () => {
     if (!walletInfo || !walletService || isLoadingData) return;
 
@@ -56,7 +56,7 @@ export default function HomeScreen() {
       console.log('🔄 Loading total balance for wallet:', walletInfo.publicKey.toString());
       console.log('💰 Current SOL balance:', walletInfo.balance);
       
-      // Get real-time SOL price
+      // Get real-time SOL price (single API call)
       const solPrice = await getRealTimeSOLPrice();
       console.log('📈 SOL price:', solPrice);
       
@@ -64,32 +64,30 @@ export default function HomeScreen() {
       let total = walletInfo.balance * solPrice;
       console.log('💵 SOL value:', total);
 
-      // Get all token balances
+      // Get all token balances (rate limited)
       const tokenBalances = await walletService.getTokenBalances(walletInfo.publicKey);
       console.log('🪙 Token balances found:', tokenBalances.length);
       
-      // Add token values to total using real-time prices
-      for (let i = 0; i < tokenBalances.length; i++) {
-        const token = tokenBalances[i];
+      // Limit to first 3 tokens to prevent excessive API calls
+      const limitedTokens = tokenBalances.slice(0, 3);
+      console.log(`📊 Processing ${limitedTokens.length} tokens (limited to prevent rate limiting)`);
+      
+      // Add token values using cached/fallback prices (avoid API calls in loop)
+      for (let i = 0; i < limitedTokens.length; i++) {
+        const token = limitedTokens[i];
         if (token.balance > 0) {
-          console.log(`🪙 Processing token ${i + 1}/${tokenBalances.length}: ${token.mint}, balance: ${token.balance}`);
+          console.log(`🪙 Processing token ${i + 1}/${limitedTokens.length}: ${token.mint}, balance: ${token.balance}`);
           try {
+            // Use cached price service that prefers fallbacks over API calls
             const realPrice = await getRealTimeTokenPrice(token.mint);
             const tokenValue = token.balance * realPrice;
             total += tokenValue;
             console.log(`✅ Token ${token.mint}: ${token.balance} * $${realPrice} = $${tokenValue}`);
           } catch (_error) {
-            console.warn(`⚠️ Failed to get real price for ${token.mint}, using fallback`);
-            // Fallback to mock price if real price fetch fails
-            const mockPrice = getMockTokenPrice(token.mint);
-            const tokenValue = token.balance * mockPrice;
+            console.warn(`⚠️ Failed to get price for ${token.mint}, using $1.00 fallback`);
+            const tokenValue = token.balance * 1.0;
             total += tokenValue;
-            console.log(`🔄 Token ${token.mint}: ${token.balance} * $${mockPrice} (fallback) = $${tokenValue}`);
-          }
-          
-          // Add a small delay between requests to avoid rate limiting
-          if (i < tokenBalances.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 500)); // 500ms delay
+            console.log(`🔄 Token ${token.mint}: ${token.balance} * $1.00 (fallback) = $${tokenValue}`);
           }
         }
       }

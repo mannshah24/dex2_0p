@@ -27,8 +27,9 @@ class TokenLaunchDataService {
   }
 
   async getRecentTokenLaunches(limit: number = 10): Promise<TokenLaunchData[]> {
-    // Global rate limiting
+    // Ultra conservative rate limiting to prevent 429 errors
     if (!solanaRPCRateLimiter.canMakeRequest('token_launches')) {
+      console.log('🚫 Rate limit reached for token_launches. Max 1 requests per 30000ms');
       console.log('Rate limited, skipping token launch fetch');
       return [];
     }
@@ -36,21 +37,22 @@ class TokenLaunchDataService {
     try {
       console.log('🔍 Fetching recent token launches...');
       
-      // Get recent signatures for token program
+      // Much smaller request to avoid rate limiting
       const tokenProgramSignatures = await this.connection.getSignaturesForAddress(
         TOKEN_PROGRAM_ID,
-        { limit: 50 } // Get more to filter for mint creation
+        { limit: 5 } // Very small limit to reduce API calls
       );
 
-      const token2022Signatures = await this.connection.getSignaturesForAddress(
-        TOKEN_2022_PROGRAM_ID,
-        { limit: 50 }
-      );
+      // Skip Token-2022 for now to reduce API load
+      // const token2022Signatures = await this.connection.getSignaturesForAddress(
+      //   TOKEN_2022_PROGRAM_ID,
+      //   { limit: 5 }
+      // );
 
-      // Combine and sort by timestamp
-      const allSignatures = [...tokenProgramSignatures, ...token2022Signatures]
+      // Use only token program signatures for now
+      const allSignatures = [...tokenProgramSignatures]
         .sort((a, b) => (b.blockTime || 0) - (a.blockTime || 0))
-        .slice(0, limit * 3); // Get more to filter for actual mints
+        .slice(0, limit); // Much smaller batch
 
       console.log('🔍 Found signatures:', allSignatures.length);
 

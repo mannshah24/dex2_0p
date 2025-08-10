@@ -1,8 +1,9 @@
 import { NetworkConfig } from '@/constants/network-config';
 import { transact } from '@solana-mobile/mobile-wallet-adapter-protocol-web3js';
-import { TOKEN_2022_PROGRAM_ID, TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { Connection, Keypair, LAMPORTS_PER_SOL, PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js';
 import { toUint8Array } from 'js-base64';
+import { solanaRPCRateLimiter } from '../utils/rate-limiter';
 import { WalletConnectionDebugger, safeFirst } from '../utils/wallet-debug';
 
 export interface WalletInfo {
@@ -505,38 +506,43 @@ export class WalletService {
       const cacheKey = publicKey.toString();
       const now = Date.now();
       
-      // Check cache first
+      // Check cache first with longer duration (10 minutes instead of 5)
       const cached = this.tokenBalanceCache.get(cacheKey);
-      if (cached && (now - cached.timestamp) < this.CACHE_DURATION) {
+      if (cached && (now - cached.timestamp) < (this.CACHE_DURATION * 2)) {
         console.log('📋 Using cached token balances for:', cacheKey);
         return cached.data;
       }
       
+      // Rate limit token balance fetching to prevent 429 errors
+      const rateLimitKey = `token_balances_${cacheKey}`;
+      if (!solanaRPCRateLimiter.canMakeRequest(rateLimitKey)) {
+        console.log('🚫 Rate limit reached for token balances. Returning cached data or empty array');
+        return cached ? cached.data : [];
+      }
+      
       console.log('🔍 Fetching token balances for:', publicKey.toString());
       
-      // Fetch both regular SPL tokens and Token-2022 tokens
-      const [splTokenAccounts, token2022Accounts] = await Promise.all([
-        this.retryWithFallback(async (connection) => {
-          return await connection.getParsedTokenAccountsByOwner(
-            publicKey,
-            { programId: TOKEN_PROGRAM_ID }
-          );
-        }),
-        this.retryWithFallback(async (connection) => {
-          return await connection.getParsedTokenAccountsByOwner(
-            publicKey,
-            { programId: TOKEN_2022_PROGRAM_ID }
-          );
-        })
-      ]);
+      // Only fetch SPL tokens for now to reduce API load
+      // Skip Token-2022 to prevent excessive API calls
+      const splTokenAccounts = await this.retryWithFallback(async (connection) => {
+        return await connection.getParsedTokenAccountsByOwner(
+          publicKey,
+          { programId: TOKEN_PROGRAM_ID }
+        );
+      });
 
-      // Combine and format all token balances
-      const allAccounts = [
-        ...splTokenAccounts.value,
-        ...token2022Accounts.value
-      ];
+      // Skip Token-2022 for now to reduce rate limiting issues
+      // const token2022Accounts = await this.retryWithFallback(async (connection) => {
+      //   return await connection.getParsedTokenAccountsByOwner(
+      //     publicKey,
+      //     { programId: TOKEN_2022_PROGRAM_ID }
+      //   );
+      // });
 
-      console.log(`📊 Found ${splTokenAccounts.value.length} SPL tokens and ${token2022Accounts.value.length} Token-2022 tokens`);
+      // Use only SPL token accounts for now
+      const allAccounts = [...splTokenAccounts.value];
+
+      console.log(`📊 Found ${splTokenAccounts.value.length} SPL tokens (skipping Token-2022 to reduce rate limits)`);
 
       const formattedBalances = allAccounts.map((account) => {
         const parsedInfo = account.account.data.parsed.info;

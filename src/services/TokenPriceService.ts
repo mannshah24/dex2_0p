@@ -16,9 +16,9 @@ export interface TokenPriceData {
 
 class TokenPriceService {
   private cache: Map<string, { data: TokenPrice; timestamp: number }> = new Map();
-  private readonly CACHE_DURATION = 300000; // 5 minutes cache
+  private readonly CACHE_DURATION = 600000; // 10 minutes cache (increased from 5 minutes)
   private lastRequestTime = 0;
-  private readonly MIN_REQUEST_INTERVAL = 2000; // 2 seconds between requests
+  private readonly MIN_REQUEST_INTERVAL = 5000; // 5 seconds between requests (increased from 2s)
 
   // Common token mappings for CoinGecko
   private readonly TOKEN_MAPPINGS: { [mint: string]: string } = {
@@ -60,14 +60,32 @@ class TokenPriceService {
       
       console.log(`🔍 Fetching price for token: ${mint} (${symbol})`);
       
-      if (coinGeckoId) {
-        console.log(`📈 Using CoinGecko for ${symbol} (${coinGeckoId})`);
-        const price = await this.fetchFromCoinGecko(coinGeckoId);
-        console.log(`✅ CoinGecko price for ${symbol}: $${price}`);
-        return price;
-      } else if (symbol && this.FALLBACK_PRICES[symbol]) {
-        console.log(`🔄 Using fallback price for ${symbol}: $${this.FALLBACK_PRICES[symbol]}`);
+      // Check cache first, even if expired - prefer cached data over API calls
+      const cacheKey = `coingecko_${coinGeckoId || symbol}`;
+      const cached = this.cache.get(cacheKey);
+      
+      if (cached) {
+        console.log(`📋 Using cached price for ${symbol}: $${cached.data.current_price}`);
+        return cached.data.current_price;
+      }
+      
+      // For rate limiting, prefer fallback prices over API calls
+      if (symbol && this.FALLBACK_PRICES[symbol]) {
+        console.log(`🔄 Using fallback price for ${symbol}: $${this.FALLBACK_PRICES[symbol]} (avoiding API calls)`);
         return this.FALLBACK_PRICES[symbol];
+      }
+      
+      // Only try CoinGecko if we have no cached or fallback data
+      if (coinGeckoId) {
+        console.log(`📈 Attempting CoinGecko for ${symbol} (${coinGeckoId}) - last resort`);
+        try {
+          const price = await this.fetchFromCoinGecko(coinGeckoId);
+          console.log(`✅ CoinGecko price for ${symbol}: $${price}`);
+          return price;
+        } catch (error) {
+          console.log(`⚠️ CoinGecko failed for ${symbol}, using fallback: ${error}`);
+          return this.FALLBACK_PRICES[symbol] || 1.0;
+        }
       }
       
       console.log(`⚠️ No price mapping found for ${mint}, using default $1.00`);
