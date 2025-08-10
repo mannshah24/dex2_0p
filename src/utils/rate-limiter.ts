@@ -52,8 +52,8 @@ class RateLimiter {
 // Ultra conservative rate limiters to prevent 429 errors
 
 // Global rate limiters for different services
-export const coinGeckoRateLimiter = new RateLimiter(120000); // 1 request per 2 minutes (ultra conservative)
-export const jupiterRateLimiter = new RateLimiter(90000);    // 1 request per 1.5 minutes
-export const solanaRPCRateLimiter = new RateLimiter(45000);  // 1 request per 45 seconds (was 30s)
+export const coinGeckoRateLimiter = new RateLimiter(1, 120000); // 1 request per 2 minutes (ultra conservative)
+export const jupiterRateLimiter = new RateLimiter(1, 90000);    // 1 request per 1.5 minutes
+export const solanaRPCRateLimiter = new RateLimiter(1, 60000);  // 1 request per 60 seconds (even more conservative)
 
 export default RateLimiter;
