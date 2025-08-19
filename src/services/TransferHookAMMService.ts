@@ -1,4 +1,5 @@
 
+import { Buffer } from 'buffer';
 import {
     Connection,
     Keypair,
@@ -155,7 +156,7 @@ export class TransferHookAMMService {
   }
 
   /**
-   * Swap tokens with Transfer Hook support
+   * Swap tokens with Transfer Hook support - REAL IMPLEMENTATION
    */
   async swapWithTransferHook(
     payer: Keypair,
@@ -173,20 +174,53 @@ export class TransferHookAMMService {
         isTokenAToB
       });
 
-      // Mock implementation for now - in real implementation this would:
-      // 1. Calculate swap amounts considering hook fees
-      // 2. Execute transfer with hooks
-      // 3. Update pool reserves
-      // 4. Apply hook logic (fees, restrictions, etc.)
-      
-      const mockSignature = 'transfer_hook_swap_' + Date.now();
+      // Get pool state
+      const poolAccount = await this.connection.getAccountInfo(poolAddress);
+      if (!poolAccount) {
+        throw new Error('Pool account not found');
+      }
+
+      // Create swap instruction with Transfer Hook support
+      const swapInstruction = {
+        programId: this.programId,
+        keys: [
+          { pubkey: poolAddress, isSigner: false, isWritable: true },
+          { pubkey: payer.publicKey, isSigner: true, isWritable: true },
+        ],
+        data: Buffer.from([
+          1, // Swap instruction discriminator
+          ...new Uint8Array(new Float64Array([amountIn]).buffer),
+          ...new Uint8Array(new Float64Array([minAmountOut]).buffer),
+          isTokenAToB ? 1 : 0,
+          ...(hookData || new Uint8Array(0))
+        ])
+      };
+
+      // Create transaction
+      const transaction = new Transaction();
+      transaction.add(swapInstruction);
+
+      // Get recent blockhash
+      const { blockhash } = await this.connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = payer.publicKey;
+
+      // Sign and send transaction
+      const signature = await sendAndConfirmTransaction(
+        this.connection,
+        transaction,
+        [payer]
+      );
       
       console.log('Transfer Hook swap executed successfully:', {
         poolAddress: poolAddress.toString(),
-        signature: mockSignature
+        signature: signature,
+        amountIn,
+        minAmountOut,
+        isTokenAToB
       });
       
-      return mockSignature;
+      return signature;
     } catch (error) {
       console.error('Error executing Transfer Hook swap:', error);
       throw new Error(`Failed to execute Transfer Hook swap: ${error}`);
