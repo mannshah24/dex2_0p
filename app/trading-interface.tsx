@@ -6,13 +6,13 @@ import { Keypair, PublicKey } from '@solana/web3.js';
 import { Buffer } from 'buffer';
 import React, { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
 
 interface TradingPair {
@@ -31,7 +31,6 @@ interface TradingPair {
   pool: PublicKey;
   hasTransferHook: boolean;
   hookType: string;
-  hookDescription: string;
 }
 
 const DEMO_TRADING_PAIRS: TradingPair[] = [
@@ -50,8 +49,7 @@ const DEMO_TRADING_PAIRS: TradingPair[] = [
     },
     pool: new PublicKey('DemoPool1111111111111111111111111111111111'),
     hasTransferHook: true,
-    hookType: 'Fee Collection',
-    hookDescription: 'Collects 0.1% protocol fee on each transfer'
+    hookType: 'Fee Collection'
   },
   {
     tokenA: {
@@ -68,30 +66,11 @@ const DEMO_TRADING_PAIRS: TradingPair[] = [
     },
     pool: new PublicKey('CompliancePool111111111111111111111111111'),
     hasTransferHook: true,
-    hookType: 'Compliance',
-    hookDescription: 'KYC/AML compliance validation on transfers'
-  },
-  {
-    tokenA: {
-      mint: DevnetConfig.TOKENS.SOL,
-      symbol: 'SOL',
-      balance: 10.5,
-      decimals: 9,
-    },
-    tokenB: {
-      mint: new PublicKey('RewardsToken1111111111111111111111111111'),
-      symbol: 'RWRD',
-      balance: 750.0,
-      decimals: 6,
-    },
-    pool: new PublicKey('RewardsPool11111111111111111111111111111'),
-    hasTransferHook: true,
-    hookType: 'Rewards',
-    hookDescription: 'Distributes rewards to token holders on transfer'
+    hookType: 'Compliance'
   }
 ];
 
-export default function TradingScreen() {
+export default function TradingInterface() {
   const appTheme = useAppTheme();
   const theme = appTheme.theme;
   const { walletInfo, transferHookAMMService } = useApp();
@@ -104,7 +83,7 @@ export default function TradingScreen() {
   const [isSwapping, setIsSwapping] = useState(false);
   const [recentTrades, setRecentTrades] = useState<any[]>([]);
 
-  // Calculate swap quote with transfer hook fees
+  // Calculate swap quote
   useEffect(() => {
     if (amountIn && !isNaN(parseFloat(amountIn))) {
       const amount = parseFloat(amountIn);
@@ -138,12 +117,11 @@ export default function TradingScreen() {
       const amountInLamports = parseFloat(amountIn) * Math.pow(10, selectedPair.tokenA.decimals);
       const minAmountOut = parseFloat(amountOut) * (1 - parseFloat(slippage) / 100) * Math.pow(10, selectedPair.tokenB.decimals);
 
-      console.log('🔗 Executing Transfer Hook AMM swap:', {
-        pair: `${selectedPair.tokenA.symbol}/${selectedPair.tokenB.symbol}`,
+      console.log('Executing Transfer Hook swap:', {
+        pair: selectedPair,
         amountIn: amountInLamports,
         minAmountOut,
-        hasTransferHook: selectedPair.hasTransferHook,
-        hookType: selectedPair.hookType
+        hasTransferHook: selectedPair.hasTransferHook
       });
 
       const signature = await transferHookAMMService.swapWithTransferHook(
@@ -152,7 +130,6 @@ export default function TradingScreen() {
         amountInLamports,
         minAmountOut,
         isTokenAToB,
-        // Mock hook data for demo - in real implementation this would contain hook-specific data
         selectedPair.hasTransferHook ? Buffer.from([1, 2, 3, 4]) : undefined
       );
 
@@ -165,19 +142,13 @@ export default function TradingScreen() {
         amountIn: parseFloat(amountIn),
         amountOut: parseFloat(amountOut),
         hookType: selectedPair.hasTransferHook ? selectedPair.hookType : 'None',
-        hookExecuted: selectedPair.hasTransferHook,
       };
 
       setRecentTrades(prev => [newTrade, ...prev.slice(0, 9)]); // Keep last 10 trades
 
       Alert.alert(
-        '✅ Token-2022 Swap Successful!',
-        `🔗 Transfer Hook AMM Trade Executed\n\n` +
-        `Swapped: ${amountIn} ${isTokenAToB ? selectedPair.tokenA.symbol : selectedPair.tokenB.symbol}\n` +
-        `Received: ${amountOut} ${isTokenAToB ? selectedPair.tokenB.symbol : selectedPair.tokenA.symbol}\n\n` +
-        `Transfer Hook: ${selectedPair.hookType}\n` +
-        `Hook Logic: ${selectedPair.hookDescription}\n\n` +
-        `Tx: ${signature.slice(0, 12)}...`
+        '✅ Swap Successful!',
+        `Swapped ${amountIn} ${isTokenAToB ? selectedPair.tokenA.symbol : selectedPair.tokenB.symbol} for ${amountOut} ${isTokenAToB ? selectedPair.tokenB.symbol : selectedPair.tokenA.symbol}\n\nTransfer Hook: ${selectedPair.hookType}\nTx: ${signature.slice(0, 8)}...`
       );
 
       // Reset form
@@ -185,7 +156,7 @@ export default function TradingScreen() {
       setAmountOut('');
 
     } catch (error) {
-      console.error('Transfer Hook swap error:', error);
+      console.error('Swap error:', error);
       Alert.alert('Swap Failed', `Error: ${error}`);
     } finally {
       setIsSwapping(false);
@@ -206,30 +177,17 @@ export default function TradingScreen() {
       {/* Header */}
       <View style={styles.header}>
         <AppText style={[styles.title, { color: theme.colors.text }]}>
-          🏆 Token-2022 AMM Trading
+          Token-2022 Trading
         </AppText>
         <AppText style={[styles.subtitle, { color: theme.colors.muted }]}>
-          Trade Token-2022 with Transfer Hooks on Solana AMM
-        </AppText>
-      </View>
-
-      {/* Bounty Achievement Banner */}
-      <View style={[styles.bountyBanner, { backgroundColor: theme.colors.accent + '20' }]}>
-        <AppText style={[styles.bountyTitle, { color: theme.colors.accent }]}>
-          🎯 Bounty Implementation Complete!
-        </AppText>
-        <AppText style={[styles.bountyText, { color: theme.colors.text }]}>
-          ✅ Token-2022 with Transfer Hooks{'\n'}
-          ✅ AMM Pool Creation (SOL-token pairs){'\n'}
-          ✅ Live Trading Interface{'\n'}
-          ✅ Whitelisted Hook Security Model
+          Trade tokens with Transfer Hook support
         </AppText>
       </View>
 
       {/* Pair Selection */}
       <View style={[styles.section, { backgroundColor: theme.colors.surface }]}>
         <AppText style={[styles.sectionTitle, { color: theme.colors.text }]}>
-          🔗 Transfer Hook Trading Pairs
+          Trading Pair
         </AppText>
         {DEMO_TRADING_PAIRS.map((pair, index) => (
           <TouchableOpacity
@@ -244,14 +202,9 @@ export default function TradingScreen() {
             onPress={() => setSelectedPair(pair)}
           >
             <View style={styles.pairInfo}>
-              <View style={styles.pairDetails}>
-                <AppText style={[styles.pairSymbol, { color: theme.colors.text }]}>
-                  {pair.tokenA.symbol}/{pair.tokenB.symbol}
-                </AppText>
-                <AppText style={[styles.hookDescription, { color: theme.colors.muted }]}>
-                  {pair.hookDescription}
-                </AppText>
-              </View>
+              <AppText style={[styles.pairSymbol, { color: theme.colors.text }]}>
+                {pair.tokenA.symbol}/{pair.tokenB.symbol}
+              </AppText>
               <View style={styles.hookBadge}>
                 <AppText style={[styles.hookBadgeText, { color: theme.colors.accent }]}>
                   🔗 {pair.hookType}
@@ -265,7 +218,7 @@ export default function TradingScreen() {
       {/* Swap Interface */}
       <View style={[styles.section, { backgroundColor: theme.colors.surface }]}>
         <AppText style={[styles.sectionTitle, { color: theme.colors.text }]}>
-          💱 Token-2022 Swap Interface
+          Swap Tokens
         </AppText>
         
         {/* Token In */}
@@ -314,16 +267,13 @@ export default function TradingScreen() {
         {selectedPair.hasTransferHook && (
           <View style={[styles.hookInfo, { backgroundColor: theme.colors.warning + '20' }]}>
             <AppText style={[styles.hookInfoTitle, { color: theme.colors.warning }]}>
-              🔗 Transfer Hook Active - {selectedPair.hookType}
+              🔗 Transfer Hook Active
             </AppText>
             <AppText style={[styles.hookInfoText, { color: theme.colors.text }]}>
-              {selectedPair.hookDescription}
+              Hook Type: {selectedPair.hookType}
             </AppText>
             <AppText style={[styles.hookInfoText, { color: theme.colors.text }]}>
-              Additional Hook Fee: ~0.1% (applied during transfer)
-            </AppText>
-            <AppText style={[styles.hookInfoText, { color: theme.colors.success }]}>
-              ✅ Whitelisted and Security Verified
+              Additional Fee: ~0.1%
             </AppText>
           </View>
         )}
@@ -362,7 +312,7 @@ export default function TradingScreen() {
             <ActivityIndicator color={theme.colors.background} size="small" />
           ) : (
             <AppText style={[styles.swapButtonText, { color: theme.colors.background }]}>
-              🔗 Execute Transfer Hook Swap
+              Swap with Transfer Hook
             </AppText>
           )}
         </TouchableOpacity>
@@ -372,7 +322,7 @@ export default function TradingScreen() {
       {recentTrades.length > 0 && (
         <View style={[styles.section, { backgroundColor: theme.colors.surface }]}>
           <AppText style={[styles.sectionTitle, { color: theme.colors.text }]}>
-            📊 Recent Transfer Hook Trades
+            Recent Trades
           </AppText>
           {recentTrades.map((trade, index) => (
             <View key={index} style={[styles.tradeItem, { borderColor: theme.colors.border }]}>
@@ -380,16 +330,9 @@ export default function TradingScreen() {
                 <AppText style={[styles.tradeTokens, { color: theme.colors.text }]}>
                   {trade.tokenIn} → {trade.tokenOut}
                 </AppText>
-                <View style={styles.tradeStatus}>
-                  {trade.hookExecuted && (
-                    <AppText style={[styles.hookExecuted, { color: theme.colors.success }]}>
-                      🔗 Hook ✓
-                    </AppText>
-                  )}
-                  <AppText style={[styles.tradeHook, { color: theme.colors.accent }]}>
-                    {trade.hookType}
-                  </AppText>
-                </View>
+                <AppText style={[styles.tradeHook, { color: theme.colors.accent }]}>
+                  {trade.hookType}
+                </AppText>
               </View>
               <AppText style={[styles.tradeAmounts, { color: theme.colors.muted }]}>
                 {trade.amountIn} → {trade.amountOut}
@@ -402,32 +345,18 @@ export default function TradingScreen() {
         </View>
       )}
 
-      {/* Technical Implementation Details */}
-      <View style={[styles.section, { backgroundColor: theme.colors.surface }]}>
-        <AppText style={[styles.sectionTitle, { color: theme.colors.text }]}>
-          🛠️ Technical Implementation
+      {/* Bounty Info */}
+      <View style={[styles.bountyInfo, { backgroundColor: theme.colors.accent + '10' }]}>
+        <AppText style={[styles.bountyTitle, { color: theme.colors.accent }]}>
+          🏆 Bounty: Token-2022 + Transfer Hooks AMM
         </AppText>
-        <View style={styles.techDetails}>
-          <AppText style={[styles.techTitle, { color: theme.colors.accent }]}>
-            Token-2022 Program Integration:
-          </AppText>
-          <AppText style={[styles.techText, { color: theme.colors.text }]}>
-            • Uses official Token-2022 Program ID: TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb{'\n'}
-            • Implements Transfer Hook interface for custom logic{'\n'}
-            • Supports whitelisted hook programs for security{'\n'}
-            • Real-time hook execution during token transfers
-          </AppText>
-          
-          <AppText style={[styles.techTitle, { color: theme.colors.accent }]}>
-            AMM Architecture:
-          </AppText>
-          <AppText style={[styles.techText, { color: theme.colors.text }]}>
-            • Custom AMM service supporting Token-2022{'\n'}
-            • Transfer hook validation before execution{'\n'}
-            • Hook fee calculation in swap quotes{'\n'}
-            • Secure pool creation with hook compliance
-          </AppText>
-        </View>
+        <AppText style={[styles.bountyText, { color: theme.colors.text }]}>
+          ✅ Create Token-2022 with Transfer Hook{'\n'}
+          ✅ Create LP pool (SOL-token pair){'\n'}
+          ✅ Enable trading with hook compliance{'\n'}
+          🔄 Whitelisted hook security model{'\n'}
+          🔄 Real Transfer Hook execution
+        </AppText>
       </View>
     </ScrollView>
   );
@@ -441,34 +370,14 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 30,
     alignItems: 'center',
-    paddingTop: 40,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 8,
-    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    textAlign: 'center',
-    lineHeight: 22,
-  },
-  bountyBanner: {
-    padding: 20,
-    marginBottom: 20,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  bountyTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  bountyText: {
-    fontSize: 14,
-    lineHeight: 20,
     textAlign: 'center',
   },
   section: {
@@ -492,28 +401,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  pairDetails: {
-    flex: 1,
-    marginRight: 12,
-  },
   pairSymbol: {
     fontSize: 16,
     fontWeight: '600',
-    marginBottom: 4,
-  },
-  hookDescription: {
-    fontSize: 12,
-    lineHeight: 16,
   },
   hookBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
   },
   hookBadgeText: {
-    fontSize: 11,
-    fontWeight: '600',
+    fontSize: 12,
+    fontWeight: '500',
   },
   tokenInput: {
     padding: 16,
@@ -524,7 +423,6 @@ const styles = StyleSheet.create({
   tokenLabel: {
     fontSize: 14,
     marginBottom: 8,
-    fontWeight: '500',
   },
   amountInput: {
     fontSize: 24,
@@ -544,19 +442,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   hookInfo: {
-    padding: 16,
+    padding: 12,
     borderRadius: 8,
     marginVertical: 12,
   },
   hookInfoTitle: {
     fontSize: 14,
     fontWeight: '600',
-    marginBottom: 8,
+    marginBottom: 4,
   },
   hookInfoText: {
     fontSize: 12,
-    lineHeight: 16,
-    marginBottom: 4,
   },
   slippageContainer: {
     flexDirection: 'row',
@@ -598,43 +494,35 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   tradeTokens: {
     fontSize: 14,
     fontWeight: '500',
   },
-  tradeStatus: {
-    alignItems: 'flex-end',
-  },
-  hookExecuted: {
-    fontSize: 10,
-    fontWeight: '600',
-    marginBottom: 2,
-  },
   tradeHook: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '500',
   },
   tradeAmounts: {
     fontSize: 12,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   tradeTx: {
     fontSize: 10,
   },
-  techDetails: {
-    marginTop: 8,
+  bountyInfo: {
+    padding: 16,
+    borderRadius: 8,
+    marginTop: 20,
   },
-  techTitle: {
+  bountyTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  bountyText: {
     fontSize: 14,
-    fontWeight: '600',
-    marginTop: 12,
-    marginBottom: 8,
+    lineHeight: 20,
   },
-  techText: {
-    fontSize: 12,
-    lineHeight: 18,
-    marginBottom: 8,
-  },
-}); 
+});
