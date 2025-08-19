@@ -1,5 +1,4 @@
 
-import { Buffer } from 'buffer';
 import {
     Connection,
     Keypair,
@@ -8,6 +7,7 @@ import {
     Transaction,
     sendAndConfirmTransaction,
 } from '@solana/web3.js';
+import { Buffer } from 'buffer';
 
 export interface TransferHookPool {
   pool: PublicKey;

@@ -1,9 +1,9 @@
-import { Buffer } from 'buffer';
 import { AppText } from '@/components/app-text';
 import { useAppTheme } from '@/components/app-theme';
 import { DevnetConfig } from '@/constants/devnet-config';
 import { useApp } from '@/src/context/AppContext';
 import { Keypair, PublicKey } from '@solana/web3.js';
+import { Buffer } from 'buffer';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
